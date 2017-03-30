@@ -11,7 +11,14 @@
 % Contact Info: sm.kalami@gmail.com, info@yarpiz.com
 %
 
-function PlotClusterinResult(X, IDX)
+function h1=PlotClusterinResult(X, IDX, ind_mbp, epsilon, MinPts)
+    figure, 
+    subplot(2,1,1);plot(X(:,1),X(:,2),'r.');
+    hold on; h1=plot(X(ind_mbp,1),X(ind_mbp,2),'k*');
+    legend(h1,'global-MBP');
+
+    axis equal;
+    subplot(2,1,2);
 
     k=max(IDX);
 
@@ -21,7 +28,7 @@ function PlotClusterinResult(X, IDX)
     for i=0:k
         Xi=X(IDX==i,:);
         if i~=0
-            Style = 'x';
+            Style = '.';
             MarkerSize = 8;
             Color = Colors(i,:);
             Legends{end+1} = ['Cluster #' num2str(i)];
@@ -43,5 +50,6 @@ function PlotClusterinResult(X, IDX)
     grid on;
     legend(Legends);
     legend('Location', 'NorthEastOutside');
+    title(['DBSCAN (\epsilon = ' num2str(epsilon) ', MinPts = ' num2str(MinPts) ')']);
 
 end
