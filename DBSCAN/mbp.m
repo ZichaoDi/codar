@@ -1,17 +1,9 @@
-function [ind,potential]=mbp(X,mass);
+function [ind,potential]=mbp(X,mass,epsm);
 N=size(X,1);
 potential=zeros(N,1);
-dist=ones(N,N);
 for i=1:N
-    for j=1:N
-        if(i~=j)
-            dist=norm(X(i,:)-X(j,:));
-            potential(i)=potential(i)-mass(j)/(dist+0.3);
-            % if(dist>=0.05)
-            %     potential(i)=potential(i)-mass(j)/dist;
-            % end
-        end
-    end
+    sub_ind=[1:i-1,i+1:N];
+    potential(i)=-sum(mass(sub_ind)./max(sqrt(sum(bsxfun(@minus,X(i,:),X(sub_ind,:)).^2,2)),epsm));
 end
 [~,ind]=min(potential);
 
