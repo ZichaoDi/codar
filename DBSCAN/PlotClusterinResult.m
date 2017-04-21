@@ -14,13 +14,12 @@
 function h1=PlotClusterinResult(X, IDX, ind_mbp, epsilon, MinPts,clustering)
 global epsm
     figure, 
-    subplot(2,1,1);plot(X(:,1),X(:,2),'r.');
+    subplot(3,1,1);plot(X(:,1),X(:,2),'r.');
     hold on; h1=plot(X(ind_mbp,1),X(ind_mbp,2),'k*');
     title(num2str(epsm))
-    legend(h1,'global-MBP');
 
     axis equal;
-    subplot(2,1,2);
+    subplot(3,1,2);
 
     k=max(IDX);
 
@@ -55,7 +54,7 @@ global epsm
     if(strcmp(clustering,'dbscan'))
         title(['DBSCAN (\epsilon = ' num2str(epsilon) ', MinPts = ' num2str(MinPts) ')']);
     elseif(strcmp(clustering,'kmeans'))
-        title('Kmeans');
+        title(['Kmeans ',num2str(k)]);
     end
 
 end
