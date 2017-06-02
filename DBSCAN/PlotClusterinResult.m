@@ -12,14 +12,19 @@
 %
 
 function h1=PlotClusterinResult(X, IDX, ind_mbp, epsilon, MinPts,clustering)
-global epsm
-    figure, 
-    subplot(3,1,1);plot(X(:,1),X(:,2),'r.');
+global nrow epsm
+f_ml=findobj('Tag','ml');
+if(isempty(f_ml))
+    f_ml=figure('Tag','ml');
+else
+    figure(f_ml)
+end
+    subplot(nrow,1,1);plot(X(:,1),X(:,2),'r.');
     hold on; h1=plot(X(ind_mbp,1),X(ind_mbp,2),'k*');
     title(num2str(epsm))
 
     axis equal;
-    subplot(3,1,2);
+    subplot(nrow,1,2);
 
     k=max(IDX);
 
