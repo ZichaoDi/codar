@@ -1,13 +1,13 @@
-paper = abstract_0327
+paper = report_060517
 
 # latex & bibtex each file
-abstract_0327.pdf: $(paper).tex
-	pdflatex $(paper)
-# 	bibtex $(paper)
-# 	latex $(paper)
-# 	latex $(paper)
-# 	dvipdf $(paper).dvi
 
+report_060517.pdf: $(paper).tex
+	latex $(paper)
+#	bibtex $(paper)
+	latex $(paper)
+	latex $(paper)
+	dvipdf $(paper).dvi
 
 # create pictures, if needed 
 .SUFFIXES: .fig .pdf .eps

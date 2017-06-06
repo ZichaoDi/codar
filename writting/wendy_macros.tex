@@ -1,0 +1,142 @@
+%---------------------------------------------------------------------------
+%Tomo USER DEFINED MACROS
+
+%Response to review macros
+\newcommand{\bfc}[1]{{\bf \underline{Response:} }\textnormal{#1}}
+\usepackage{color}
+% \definecolor{gray}{rgb}{0.5,0.5,0.5}
+
+%%% The following commands are for a marked up version 2, comment for markedup
+ % \newcommand{\addone}[1]{\textcolor{violet}{#1}}
+ %  \newcommand{\changeone}[1]{\textcolor{red}{#1}}
+ %  \newcommand{\doneone}[2][]{\todo[#1]{#2}}
+%%% unmarkedup
+  \newcommand{\addone}[1]{#1}
+  \newcommand{\changeone}[1]{#1}
+  \newcommand{\doneone}[2][]{}
+%%% The following commands are for an unmarked up version 1, comment for markedup
+\newcommand{\added}[1]{#1}
+\newcommand{\changed}[1]{#1}
+\newcommand{\removed}[1]{}
+\newcommand{\done}[2][]{}
+\newcommand{\mdone}[1]{}
+
+
+%Paper body notation
+\newcommand{\R}{\mathbb{R}} % reals
+\newcommand{\cE}{{\mathcal{E}}} % This will be the set of elements
+\newcommand{\cV}{{\mathcal{V}}} % This will be the set of voxels
+\newcommand{\cN}{{\mathcal{N}}} % This will be the non-binding set
+\newcommand{\cI}{{\mathcal{I}}} % This will be the set of energy channels
+\newcommand{\mcT}{{\mathcal{T}}} % This will be the set of energy channels
+\newcommand{\cU}{{\mathcal{U}}} % This will be the set of upstream voxels
+\newcommand{\cA}{\mathcal{A}} % Active set
+\newcommand{\I}[1]{\mathbb{I}_{#1}} % The indicator function
+\newcommand{\ones}{\mathbf{1}} % Vector ones
+\newcommand{\At}{  A^{E,\theta,\tau}} % Attenuation array
+\newcommand{\A}{ {\bf A}} % Attenuation array
+\newcommand{\bd}{ {\bf d}} 
+\newcommand{\bx}{ {\bf x}} 
+\newcommand{\Fl}{\pmb{\mathbf{\rho}}} % Fluorescence emitted array
+\newcommand{\Le}{{\bf L}} % length array
+\newcommand{\m}{{\bf m}} % M
+\newcommand{\cW}{{\mathcal{W}}}
+\newcommand{\bcW}{\pmb{\mathbf{\cW}}}
+\newcommand{\X}{{\bf X}}
+\newcommand{\bc}{{\bf c}}
+\newcommand{\byi}{{\bf y_i}}
+\newcommand{\bmi}{{\bf m_i}}
+\newcommand{\Y}{{\bf Y}}
+\newcommand{\ds}{{\displaystyle}}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\MD}[1]{{\bf D}_{\theta,\tau}^\mathit{#1}}  % experimental
+\newcommand{\MDRi}{D_{\theta,\tau,\iota}^\mathit{R}}  % experimental
+\newcommand{\D}[1]{{\bf D}^\mathit{#1}}  % experimental
+% data XRF
+\newcommand{\MDT}{D_{\theta,\tau}^\mathit{T}}  % experimental data XRF
+\newcommand{\tMD}[1]{\pmb{\mathbf{\tilde{D}}}_{\theta,\tau}^\mathit{#1}}  %
+% experimental data
+
+\newcommand{\FM}[1]{{\bf F}_{\theta,\tau}^\mathit{#1}} % forward model
+\newcommand{\FMRi}{F_{\theta,\tau,\iota}^\mathit{R}} % forward model
+% for XRF
+\newcommand{\FMT}[1]{{#1}_{\theta,\tau}^\mathit{T}}% forward model for XRT
+\newcommand{\J}[1]{{\bf J}^\mathit{#1}} % forward model for XRF
+
+
+%% macros from CVT
+\def \ds          {\displaystyle}
+\def \rmd         {{\rm d}}
+\def \be          {{\bf e}}
+\def \bF          {{\bf F}}
+\def \bI          {{\bf I}}
+\def \bn          {{\bf n}}
+\def \bff         {{\bf f}}
+\def \bdf         {{\bf df}}
+\def \bdT         {{\bf dT}}
+\def \bT          {{\bf T}}
+\def \cT          {{\cal T}}
+\def \bU          {{\bf U}}
+\def \bu          {{\bf u}}
+\def \bv          {{\bf v}}
+\def \bV          {{\bf V}}
+\def \bX          {{\bf X}}
+\def \by          {{\bf y}}
+\def \bY          {{\bf Y}}
+\def \bz          {{\bf z}}
+\def \bZ          {{\bf Z}}
+\def \bW          {{\bf W}}
+\def \bZt         {{\bf \widetilde Z}}
+\def \bzi         {{\bz}_i}
+\def \bzs         {{\bz}^*}
+\def \bzis        {{\bz}_i^*}
+\def \bzin        {\{\bzi\}_{i=1}^k}
+\def \cf          {{\cal F}}
+\def \cg          {{\cal G}}
+\def \ch          {{\cal H}}
+\def \vi          {{V_i}}
+\def \vin         {\{\vi\}_{i=1}^k}
+\def \Babs        {{\Big|}}
+\def \Bl          {{\Big(}}
+\def \Br          {{\Big)}}
+\def \Bleft       {{\Big[}}
+\def \Bright      {{\Big]}}
+\def \p           {\partial}
+\def \N           {{\mathbb N}}
+\def\y            {{\bf y}}
+\def \tN          {{\widetilde{N}}}
+\def \tD          {{\widetilde{D}}}
+
+\def \proofnote #1{\footnote{{\bf Note: #1}}}
+\def \norm      #1{\left\|\,#1\,\right\|}
+\def \set       #1{\left\{\,#1\,\right\}}
+\def \tr          {^T}
+\def \IhH         {I_h^H}
+\def \IhHb        {{\hat I}_h^H}
+\def \IHh         {I_H^h}
+\def \vbar        {\bar v}
+\def \zhbar       {\bar z_h}
+\def \zHbar       {\bar z_H}
+\def \zhplus      {z_h^+}
+\def \zHplus      {z_H^+}
+
+\newcommand{\C}{{\bf C}}
+\newcommand{\bmu}{\mathbf{\pmb{\mu}}} % This is for voxel attenuation
+\newcommand{\lmu}{\tilde{\mu}}
+\newcommand{\cbmu}{{\textcolor{red}{\bmu^E}}}
+\newcommand{\blambda}{\pmb{\mathbf{\lambda}}}
+\renewcommand{\theequation}{\thesection.\arabic{equation}}
+
+\newtheorem{alg}{Algorithm}[section]
+\newtheorem{thm}{Theorem}[section]
+\newtheorem{lem}[thm]{Lemma}
+\newtheorem{cor}[thm]{Corollary}
+\newtheorem{pro}{Proposition}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{asp}{Assumption}[section]
+\newtheorem{rmk}{Remark}[section]
+\newtheorem{exmp}{Example}[section]
+
+\newcommand{\SNote}[1]           % For Stefan's margin notes
+{\textcolor{blue}{#1}\marginpar{\textcolor{blue}{SW $\longleftarrow$}}}
+\newcommand{\cF}{\mathcal{F}}

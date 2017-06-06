@@ -11,7 +11,7 @@
 % Contact Info: sm.kalami@gmail.com, info@yarpiz.com
 %
 
-function [IDX, isnoise]=DBSCAN(X,epsilon,MinPts)
+function [IDX, c,isnoise]=DBSCAN(X,epsilon,MinPts)
 
     C=0;
     
@@ -38,6 +38,10 @@ function [IDX, isnoise]=DBSCAN(X,epsilon,MinPts)
             
         end
     
+    end
+    c = sparse(max(IDX),2);
+    for i=1:max(IDX);
+        c(i,:)=sum(X(IDX==i,:),1)/length(find(IDX==i));
     end
     
     function ExpandCluster(i,Neighbors,C)
