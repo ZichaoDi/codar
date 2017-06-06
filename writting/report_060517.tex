@@ -42,7 +42,7 @@
 \caption{Mixed Particle/Super-particle Hierarchy}
 \label{sp-mixed}
 \begin{algorithmic}[1]
-\Procedure {$MBP=mixed_kmeans(X,m)$}{}
+\Procedure {$MBP=mixed\_kmeans(X,m)$}{}
 \State $[IDX,c]=kmeans(X,N_c)$, where $N_c$ is  the number of clusters, $IDX\in \mathbb{N}^{N_p}$ is the index function to indicate which cluster particle $X_i$ belongs to, ${\bf c} _i \in \mathbb{R}^{2}, \, i=1,\dots,N_c$ is the centroid of each cluster. 
 \State $\bar m_i=|\{j | IDX(j)=i\}|,\,\forall i=1:N_c$
 \State $SBP_i=\ds\sum_{\{j|IDX(i)\neq j\}}\frac{\bar m_j}{d(X_i,c_j)}+\ds\sum_{\{j|IDX(j)=IDX(i),i\neq j\}}\frac{m_j}{d(X_i,X_j)},\, \forall i$ 
@@ -68,7 +68,7 @@
 \caption{Super-particle Hierarchy}
 \label{sp-p}
 \begin{algorithmic}[1]
-\Procedure {$MBP=sp_kmeans(X,m)$}{}
+\Procedure {$MBP=sp\_kmeans(X,m)$}{}
 \State $[IDX,c]=kmeans(X,N_c)$ 
 \State $\bar m_i=|\{j | IDX(j)=i\}|,\,\forall i=1:N_c$
 \State $MBP=\ds\min_i \ds\sum_{\{j|IDX(i)\neq j\}}\frac{\bar m_j}{d(X_i,c_j)}$ 
@@ -115,12 +115,12 @@
 \caption{Locate MBP from a subset of particles which forms the most dense super-particle via DBSCAN}
 \label{dbscan_max}
 \begin{algorithmic}[1]
-\Procedure {$MBP=mbp_dbscan_max(X,m)$}{}
+\Procedure {$MBP=mbp\_dbscan\_max(X,m)$}{}
 \State $[IDX,c]=dbscan(X,\varepsilon)$, where $\varepsilon$ is the linkage length provided for DBSCAN. 
 \State $\bar m_i=|\{j | IDX(j)=i\}|,\,\forall i=1:N_c$, where $N_c$ is the resulted number of clusters given $\varepsilon$
 \State $i_s=\ds\max_i \bar{m_i}$
 \State $V=\{j \,|\, IDX(j)=i_s\}$
-\State $SBP_i=\ds\sum_{\{j|IDX(i)\neq j\}}\frac{\bar m_j}{d(X_i,c_j)}+\ds\sum_{\{j|IDX(j)=IDX(i),i\neq j\}}\frac{m_j}{d(X_i,X_j)},\, \forall i\in V$ 
+\State $SBP_i=\ds\sum_{i\neq j\}}\frac{m_j}{d(X_i,X_j)},\, \forall i\in V$ 
 \State $MBP=\ds\min_{i\in V} SBP_i$
 \EndProcedure
 \end{algorithmic} 
