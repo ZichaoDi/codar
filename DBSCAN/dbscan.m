@@ -26,7 +26,6 @@ function [IDX, c,isnoise]=DBSCAN(X,epsilon,MinPts)
     for i=1:n
         if ~visited(i)
             visited(i)=true;
-            
             Neighbors=RegionQuery(i);
             if numel(Neighbors)<MinPts
                 % X(i,:) is NOISE

@@ -19,7 +19,6 @@ L = [];
 L1 = 0;
 
 while length(unique(L)) ~= k
-    
     % The k-means++ initialization.
     C = X(:,1+round(rand*(size(X,2)-1)));
     L = ones(1,size(X,2));
@@ -30,7 +29,6 @@ while length(unique(L)) ~= k
         C(:,i) = X(:,find(rand < D/D(end),1));
         [~,L] = max(bsxfun(@minus,2*real(C'*X),dot(C,C,1).'));
     end
-    
     % The k-means algorithm.
     while any(L ~= L1)
         L1 = L;

@@ -14,6 +14,12 @@
 function h1=PlotClusterinResult(X, IDX, ind_mbp, epsilon, MinPts,clustering)
 global nrow epsm
 f_ml=findobj('Tag','ml');
+    f_cluster=findobj('Tag','cluster');
+if(isempty(f_cluster))
+    f_cluster=figure('Tag','cluster');
+else
+    figure(f_cluster)
+end
 if(isempty(f_ml))
     f_ml=figure('Tag','ml');
 else
@@ -24,8 +30,9 @@ end
     title(num2str(epsm))
 
     axis equal;
-    subplot(nrow,1,2);
-
+    % subplot(nrow,1,2);
+    % figure(f_cluster)
+    figure,
     k=max(IDX);
 
     Colors=hsv(k);

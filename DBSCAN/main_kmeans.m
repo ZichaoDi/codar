@@ -31,30 +31,22 @@ global_center=centroid(X);
 %% Run DBSCAN Clustering Algorithm
 tic;
 clustering='kmeans';
-if(strcmp(clustering,'kmeans'))
-    N_cluster=4;
-    [IDX,c]=kmeans(X',N_cluster);% 
-    epsilon=0;
-    MinPts=0;
-elseif(strcmp(clustering,'dbscan'))
-    epsilon=0.002;
-    MinPts=10;
-    [IDX,c]=dbscan(X,epsilon,MinPts);% 
-    N_cluster=max(IDX);
-else
-    epsilon=0.1;
-    MinPts=0;
-    N_cluster=10;
-    ind_k=ceil(rand(N_cluster,1)*subN);
-    IDX1=rangesearch(X,X(ind_k,:),epsilon);
-    IDX=[];
-    for j=1:N_cluster
-        IDX(IDX1{j})=j;
-    end
-end;
+N_cluster=4;
+[IDX,c]=kmeans(X',N_cluster);% 
+toc;
+epsilon=0;
+MinPts=0;
 nrow=4;
 h1=PlotClusterinResult(X,IDX,ind_mbp,epsilon,MinPts,clustering);
 fprintf('# of sub-clusters: %d \n',N_cluster);
+%%%====================== only consider relationship with the ones in the same cluster
+tic;
+for j=1:subN
+    ind_other=find(IDX==IDX(j));
+    super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,X(j,:),X(ind_other,:)).^2,2)),epsm));
+end
+[~,ind_super]=min(super_potential);
+toc;
 %%%====================== One step potential of particles in the same cluster
 %{
 mbps=zeros(N_cluster,2);
@@ -77,6 +69,7 @@ for i=1:N_cluster;
 end
 [~,ind_super]=min(super_potential);
 toc;
+%}
 
 figure(findobj('Tag','ml'));
 subplot(nrow,1,1);hold on; h2=plot(X(ind_super,1),X(ind_super,2),'go');
@@ -96,7 +89,6 @@ subplot(2,1,2)
 scatter(X(:,1),X(:,2),5,map1D(super_potential,[lb,ub])); colorbar;
 title('super BP')
 return;
-%}
 
 %%%======================== only pairwise distance between particle and super-particle
 mass_sp=ones(N_cluster,1);
