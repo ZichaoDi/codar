@@ -18,6 +18,7 @@ end
 PWD = pwd;
 addpath_recurse([mcsDir,slash,'Di_MATLABtool']);
 addpath_recurse('./kdtree');
+addpath_recurse('./MinMaxFilterFolder');
 
 
 

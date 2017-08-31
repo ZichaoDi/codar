@@ -106,8 +106,7 @@ end
 % and in that case send the right node out for inquiry 
 if ( ((point(tree_cell(node_number).splitdim)+range(1,tree_cell(node_number).splitdim))>tree_cell(node_number).splitval) &&...
         ((point(tree_cell(node_number).splitdim)+range(2,tree_cell(node_number).splitdim))>tree_cell(node_number).splitval) )
-
-    if (~isempty(tree_cell(node_number).left))
+    if (~isempty(tree_cell(node_number).right))
         [index_vals1,dist_vals1,vector_vals1]=kd_rangequery(0,point,range,tree_cell(node_number).right);
     else
         index_vals1=[];dist_vals1=[];vector_vals1=[];
