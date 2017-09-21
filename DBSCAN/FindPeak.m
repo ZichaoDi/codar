@@ -11,6 +11,8 @@ for i = 2:length(ind)
     dist=sqrt(sum(dist.^2,2));
     if (isempty(find(dist<epsilon)))
         peaks=[peaks,iind];
+    else
+        % disp('in the region')
     end
     if length(peaks)==coreNo
         break;

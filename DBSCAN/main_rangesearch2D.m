@@ -1,6 +1,7 @@
 %% Load Data
 more off;
-global nrow epsm
+global nrow epsm dimen
+dimen=2;
 rng('default')
 files=dir('/homes/erangel/plank_halos_cf/*.bin');
 figure,
@@ -11,9 +12,9 @@ fid=fopen([pathstr,'/', name, ext]);
 data=fread(fid,'single');
 data=reshape(data,size(data,1)/3,3);
 N_particle=size(data,1);
-plot3(data(:,1),data(:,2),data(:,3),'r.')
-title(num2str([file,N_particle]));
-pause(1);
+% plot3(data(:,1),data(:,2),data(:,3),'r.')
+% title(num2str([file,N_particle]));
+% pause(1);
 end
 fclose(fid);
 % %%========================================================
@@ -21,8 +22,8 @@ fclose(fid);
 % ind=ceil(rand(subN,1)*N_particle);
 % X=data(ind,1:2);
 % %%========================================================
-NN=5000;%[100 1000 5000 10000 15000 20000 30000 40000 50000 60000 70000 80000 N_particle] ;% 
-plotBPmap=1;
+NN=[100 1000 5000 10000 15000 20000 30000 40000 50000 60000 70000 80000 N_particle] ;% 
+plotBPmap=0;
 epsm=0.003;
 t1=zeros(length(NN),1);
 t3=zeros(length(NN),1);
@@ -30,9 +31,9 @@ for i=1:length(NN)
     i
     subN=NN(i);
     ind=unique(ceil(rand(subN,1)*N_particle));
+    X=data(ind,1:2);
     NN(i)=length(ind);
     subN=NN(i);
-    X=data(ind,:);
     omega_global=[min(X(:,1)) max(X(:,1)) min(X(:,2)) max(X(:,2))];
     tic;
     [ind_mbp,real_potential]=mbp(X,ones(subN,1),epsm);
@@ -40,6 +41,7 @@ for i=1:length(NN)
     fprintf('time elapsed for global MBP: %d\n',t1(i));
     lb=min(real_potential);
     ub=max(real_potential);
+    tree = kd_buildtree(X,0);
     tic;
     ind_super=0;
     epsb=0.3;
@@ -57,7 +59,7 @@ for i=1:length(NN)
             % point_temp=repmat(global_center,N_cluster,1)+epsb.*direction;
             super_potential=zeros(N_cluster,1);
             if N_cluster>1
-                IDX1=rangesearch(X,point_temp,epsilon);
+                IDX1=rangesearch(tree,point_temp,epsilon);
                 for j=1:N_cluster
                      ind_other=IDX1{j};
                      super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,point_temp(j,:),X(ind_other,:)).^2,2)),epsm));
@@ -82,7 +84,7 @@ for i=1:length(NN)
             N_cluster=min([2,length(smin)]);
             point_temp_old=point_temp;
             point_temp=[xq(smin(1:N_cluster)),yq(smin(1:N_cluster))];
-            IDX1=rangesearch(X,point_temp,epsilon1);
+            IDX1=rangesearch(tree,point_temp,epsilon1);
             % super_potential_inter=zeros(N_cluster,1);
             % epsilon1=epsilon1/2;
             totalind=[];

@@ -13,9 +13,9 @@ for file=2;%11:20%1:length(files)
     % plot3(data(:,1),data(:,2),data(:,3),'r.')
 fclose(fid);
 %%========================================================
-NN= N_particle;%[100 1000 2000 5000 10000 20000 30000 40000 50000 60000 70000 80000 N_particle] ;% 
+NN= 5000;%N_particle;%[100 1000 2000 5000 10000 20000 30000 40000 50000 60000 70000 80000 N_particle] ;% 
 err=zeros(length(NN),1);
-plotBPmap=0;
+plotBPmap=1;
 epsm=0.003;
 t1=zeros(length(NN),1);
 t3=zeros(length(NN),1);
@@ -40,7 +40,7 @@ for i=1:length(NN)
     epsilon=0.2;%sqrt(2)/2*epsb;
     subind=[];
     global_center=centroid(X);
-    for level=1:10
+    for level=1:2
         MinPts=0;
         if(level==1)
             N_cluster=50;
@@ -59,58 +59,59 @@ for i=1:length(NN)
             clear ind_k IDX_temp;
             fprintf('Level %d, %d sampling points\n',level,N_cluster);
         else
+            ind_other=cell(NN,1);
             N_cluster_old=N_cluster;
-            coreNo=10;
+            coreNo=5;
             N_cluster=min([coreNo,length(smin)]);
             point_temp_old=point_temp;
             point_temp=Xsub(smin(1:N_cluster),:);
-            IDX1=rangesearch(tree,point_temp,epsilon/2);
+            IDX1=rangesearch(tree,point_temp,epsilon);
             totalind=[];
-            super_potential_total=[];
             for j=1:N_cluster
                 subind=IDX1{j};
                 sub2n=length(subind);
-                super_potential=zeros(sub2n,1);
-                for j=1:sub2n
-                    ind_other=setdiff(subind,subind(j));
-                    super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,X(subind(j),:),X(ind_other,:)).^2,2)),epsm));
+                for j_sub=1:sub2n
+                    ind_other{subind(j_sub)}=[ind_other{subind(j_sub)} setdiff(subind,subind(j_sub))];
                 end
                 totalind=[totalind subind];
-                super_potential_total=[super_potential_total;super_potential];
             end;
-            subind=totalind;
-            super_potential=super_potential_total;
+            subind=unique(totalind);
             sub2n=length(subind);
+            super_potential=zeros(sub2n,1);
+            for j=1:sub2n
+                super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,X(totalind(j),:),X(unique(ind_other{j}),:)).^2,2)),epsm));
+            end
+
             clear IDX_temp;
             fprintf('Level %d, %d sampling points with %d particles\n',level,N_cluster,sub2n);
             [~,sortind1]=sort(super_potential);
             ind_super_old=ind_super;
-        if(sub2n>1)
-            ind_super=subind(sortind1(1));
-            if(norm(ind_super_old-ind_super)==0)
-                if(N_cluster==N_cluster_old)
-                    if(norm(point_temp_old(1:N_cluster,:)-point_temp)<1e-3)
-                        disp('no difference for seeds')
+            if(sub2n>1)
+                ind_super=subind(sortind1(1));
+                if(norm(ind_super_old-ind_super)==0)
+                    if(N_cluster==N_cluster_old)
+                        if(norm(point_temp_old(1:N_cluster,:)-point_temp)<1e-3)
+                            disp('no difference for seeds')
+                        end
                     end
+                    if(ind_super==ind_mbp)
+                        err(i)=0;
+                        disp('converge to global MBP')
+                    else
+                        err(i)=norm(X(ind_mbp,:)-X(ind_super,:));
+                        fprintf('converge with error %e\n',err(i));
+                    end
+                    break;
                 end
-                if(ind_super==ind_mbp)
-                    err(i)=0;
-                    disp('converge to global MBP')
-                else
-                    err(i)=norm(X(ind_mbp,:)-X(ind_super,:));
-                    fprintf('converge with error %e\n',err(i));
-                end
+            elseif(sub2n==1)
+                ind_super=subind;
+                err(i)=norm(X(ind_mbp,:)-X(ind_super,:));
+                fprintf('converge with error %e\n',err(i));
+                break;
+            else
+                fprintf('no points for the sub region\n');
                 break;
             end
-        elseif(sub2n==1)
-            ind_super=subind;
-            err(i)=norm(X(ind_mbp,:)-X(ind_super,:));
-            fprintf('converge with error %e\n',err(i));
-            break;
-        else
-            fprintf('no points for the sub region\n');
-            break;
-        end
 
         end
         %%===========================================================================
@@ -153,4 +154,5 @@ for i=1:length(NN)
         figure,plot3(X(:,1),X(:,2),X(:,3),'r.');hold on; plot3(X(ind_mbp,1),X(ind_mbp,2),X(ind_mbp,3),'k+',X(ind_super,1),X(ind_super,2),X(ind_super,3),'bo',global_center(1),global_center(2),global_center(3),'gd');legend('particle','global-mbp','super-mbp','centroid');title(num2str(subN));
     end
 end
+% save(['time',name,'.mat'],'NN','t1','t3','err');
 end

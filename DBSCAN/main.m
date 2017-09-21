@@ -4,7 +4,8 @@ global nrow epsm dimen coreNo epsilon
 dimen=3;
 files=dir('/homes/erangel/plank_halos_cf/*.bin');
 % figure,
-for file=2;%11:20%1:length(files)
+starting=101;
+for file=starting:length(files)
     [pathstr,name,ext]=fileparts(['/homes/erangel/plank_halos_cf/',files(file).name]);
     fid=fopen([pathstr,'/', name, ext]);
     data=fread(fid,'single');
@@ -13,7 +14,7 @@ for file=2;%11:20%1:length(files)
     % plot3(data(:,1),data(:,2),data(:,3),'r.')
 fclose(fid);
 %%========================================================
-NN= N_particle;%[100 1000 2000 5000 10000 20000 30000 40000 50000 60000 70000 80000 N_particle] ;% 
+NN= N_particle;% 
 err=zeros(length(NN),1);
 plotBPmap=0;
 epsm=0.003;
@@ -23,11 +24,11 @@ rng('default')
 for i=1:length(NN)
     i
     subN=NN(i);
-    ind=unique(ceil(rand(subN,1)*N_particle));
-    NN(i)=length(ind);
-    subN=NN(i);
+    ind=1:N_particle;%randperm(subN);%unique(ceil(rand(subN,1)*N_particle));
+    % ind=randperm(subN);%unique(ceil(rand(subN,1)*N_particle));
     X=data(ind,1:dimen);
     omega_global=[min(X(:,1:dimen));max(X(:,1:dimen))];
+    tree = kd_buildtree(X,0);
     tic;
     [ind_mbp,real_potential]=mbp(X,ones(subN,1),epsm);
     t1(i)=toc;
@@ -35,7 +36,6 @@ for i=1:length(NN)
     lb=min(real_potential);
     ub=max(real_potential);
     tic;
-    tree = kd_buildtree(X,0);
     ind_super=0;
     epsilon=0.2;%sqrt(2)/2*epsb;
     subind=[];
@@ -49,22 +49,22 @@ for i=1:length(NN)
             point_temp=X(ind_k,:);
             super_potential=zeros(N_cluster,1);
             if N_cluster>1
-                tic;
                 IDX1=rangesearch(tree,point_temp,epsilon);
-                toc;
                 for j=1:N_cluster
-                     super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,point_temp(j,:),X(IDX1{j},:)).^2,2)),epsm));
+                     ind_other=IDX1{j};
+                     super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,point_temp(j,:),X(ind_other,:)).^2,2)),epsm));
                 end
             end
             clear ind_k IDX_temp;
             fprintf('Level %d, %d sampling points\n',level,N_cluster);
         else
             N_cluster_old=N_cluster;
-            coreNo=10;
+            coreNo=5;
             N_cluster=min([coreNo,length(smin)]);
             point_temp_old=point_temp;
+            % point_temp=[xq(smin(1:N_cluster)),yq(smin(1:N_cluster)),zq(smin(1:N_cluster))];
             point_temp=Xsub(smin(1:N_cluster),:);
-            IDX1=rangesearch(tree,point_temp,epsilon/2);
+            IDX1=rangesearch(tree,point_temp,epsilon);
             totalind=[];
             super_potential_total=[];
             for j=1:N_cluster
@@ -72,7 +72,7 @@ for i=1:length(NN)
                 sub2n=length(subind);
                 super_potential=zeros(sub2n,1);
                 for j=1:sub2n
-                    ind_other=setdiff(subind,subind(j));
+                    ind_other=setdiff(subind,j);
                     super_potential(j)=-sum(1./max(sqrt(sum(bsxfun(@minus,X(subind(j),:),X(ind_other,:)).^2,2)),epsm));
                 end
                 totalind=[totalind subind];
@@ -134,6 +134,14 @@ for i=1:length(NN)
         gridsize=20;
         if(level==1)
             if(size(point_temp,1)>1)
+                % omega=[min(point_temp(:,1:dimen)); max(point_temp(:,1:dimen))];
+                % F=scatteredInterpolant(point_temp(:,1),point_temp(:,2),point_temp(:,3),super_potential);
+                % [xq,yq,zq]=meshgrid(linspace(omega(1,1),omega(2,1),gridsize),linspace(omega(1,2),omega(2,2),gridsize),linspace(omega(1,3),omega(2,3),gridsize));
+                % % vq=F(xq,yq,zq);
+                % vq=griddata(point_temp(:,1),point_temp(:,2),point_temp(:,3),super_potential,xq,yq,zq);
+                % vq(isnan(vq))=0;
+                % BW=imregionalmax(-vq);
+                % smin=find(BW(:)==1);
                 smin=FindPeak([point_temp,super_potential]);
             else
                 smin=1;
@@ -142,6 +150,13 @@ for i=1:length(NN)
             Xsub=point_temp;
 
         else
+            % omega=[min(X(subind,1:dimen)); max(X(subind,1:dimen))];
+            % [xq,yq,zq]=meshgrid(linspace(omega(1,1),omega(2,1),gridsize),linspace(omega(1,2),omega(2,2),gridsize),linspace(omega(1,3),omega(2,3),gridsize));
+            % F=scatteredInterpolant(X(subind,1),X(subind,2),X(subind,3),super_potential);
+            % vq=F(xq,yq,zq);
+            % vq(isnan(vq))=0;
+            % BW=imregionalmax(-vq);
+            % smin=find(BW(:)==1);
             smin=FindPeak([X(subind,:),super_potential]);
             Xsub=X(subind,:);
         end
@@ -153,4 +168,10 @@ for i=1:length(NN)
         figure,plot3(X(:,1),X(:,2),X(:,3),'r.');hold on; plot3(X(ind_mbp,1),X(ind_mbp,2),X(ind_mbp,3),'k+',X(ind_super,1),X(ind_super,2),X(ind_super,3),'bo',global_center(1),global_center(2),global_center(3),'gd');legend('particle','global-mbp','super-mbp','centroid');title(num2str(subN));
     end
 end
+errHalo(file-starting+1)=err(end);
+tg(file-starting+1)=t1;
+ts(file-starting+1)=t3;
+N_tot(file-starting+1)=N_particle;
+save(['realHalo',num2str(starting),'.mat'],'N_tot','tg','ts','errHalo');
+
 end
