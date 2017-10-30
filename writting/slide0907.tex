@@ -141,14 +141,15 @@
 {\footnotesize
 \begin{algorithmic}[]
 \Procedure {$MBP=recursive\_localMBP(X,m)$}{}
+\State{tree=kdtree(X).}
 \State {\bf If $(level=1)$}
 \State Select uniformaly distributed random indices $\tilde{i}$ from $[1,\dots,N_p]$ as $Seeds$.
-\State For each $\tilde{i}$, $IDX=dbscan(X_{\tilde{i}},\varepsilon)$, where $\varepsilon$ is the linkage length provided for DBSCAN, and $IDX$ is the index function to indicate which particles are friends of $X_{\tilde{i}}$. Calculate $\tilde{BP}_{\tilde{i}}=\ds\sum_{\{j|IDX\neq j\}}\frac{-m_j}{d(X_{\tilde{i}},X_j)}$, where $\tilde{BP}$ denotes local bounded potential. 
+\State For each $\tilde{i}$, $IDX=rangesearch(tree,X_{\tilde{i}},\varepsilon)$, where $\varepsilon$ is the neiborhood radius provided for tree search, and $IDX$ is the index function to indicate which particles are friends of $X_{\tilde{i}}$. Calculate $\tilde{BP}_{\tilde{i}}=\ds\sum_{\{j|IDX\neq j\}}\frac{-m_j}{d(X_{\tilde{i}},X_j)}$, where $\tilde{BP}$ denotes local bounded potential. 
 \State Update $Seeds$ as local peaks of the $\tilde{BP}$ map, and find $\tilde{MBP}$ as the minimum of $\tilde{BP}$ map. 
 
 \State {\bf Else}
 
-\State for each $\tilde{i}$ in $Seeds$, calculate $IDX_{\tilde{i}}=dbscan(X_{\tilde{i}},\tilde{\varepsilon})$.
+\State for each $\tilde{i}$ in $Seeds$, calculate $IDX_{\tilde{i}}=rangesearch(tree,X_{\tilde{i}},\tilde{\varepsilon})$.
 
 \State Calculate $\tilde{BP}$ for each particle in $IDX_{\tilde{i}}$ for each $\tilde{i}$.
 \State Set $\tilde{MBP}_0=\tilde{MBP}$.
